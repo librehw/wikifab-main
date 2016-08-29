@@ -117,28 +117,44 @@ Now you should have a wikifab like wiki. Please contact us if you have any diffi
 
 ## Installation process using the full package (2nd Method)
 
-### 1. Download package and upload it to you website
-
-Download it here : http://releases.wikifab.org/wikifab/wikifabFullPackage-0.1.0.zip
-Unzip and upload directory on your server.
-
-### 2. Set Up your wiki
-
-Go to your website url, and follow installation instructions.
-
+1. Set Up your wiki 
+if your wiki is already installed and up to date, go to point 2
+if you need to set up a new wiki or update an existing one, follow the instructions here: https://www.mediawiki.org/wiki/Manual:Installing_MediaWiki
 Note : wikifab is only available in english and french for now. If you select another language, you will have a lot of missing translations.
-
-At the end of the installation, it should give you a file "LocalSettings.php" to put in your website directory.
-
+At the end of the installation, it will propose you to generate the file "LocalSettings.php", generate it and upload it to your website directory.
 At this point, your wiki is up, but it does not include the wikifab part.
+We will assume going forward that your mediawiki folder is located in /usr/share/mediawiki/
 
-### 3. Add wikifab extensions and configuration
+in some installation the permissions or the owner is not set correctly, you can execute the following
+chown -R root:root /usr/share/mediawiki/
+find /usr/share/mediawiki/ -type f -exec chmod 644 {} \;
+find /usr/share/mediawiki/ -type d -exec chmod 755 {} \;
+
+
+2. Download Wikifab package and upload it to you website
+
+Download it here : http://releases.wikifab.org/wikifab/wikifabFullPackage-0.1.0.zip Unzip and upload directory on your server.
+
+here the commands line by line (supposing your mediawiki install is located in /usr/share/mediawiki/)
+
+mkdir ~/temp
+cd ~/temp
+wget http://releases.wikifab.org/wikifab/wikifabFullPackage-0.1.0.zip
+unzip wikifabFullPackage-0.1.0.zip
+cp -R wikifab/* /usr/share/mediawiki/
+
+
+
+3. Add wikifab extensions and configuration
 
 Edit the 'LocalSettings.php' file and add the following line at the end :
+include('LocalSettings.wikifab.php') then execute the php scripts as below to install the wikifab extensions, pages and tables.
 
-	include('LocalSettings.wikifab.php');
-	
-Then execute those scripts to install wikifab extensions and pages :
+echo "include('LocalSettings.wikifab.php');" >> /usr/share/mediawiki/LocalSettings.php
+cd /usr/share/mediawiki/
+php maintenance/update.php
+php maintenance/initWikifab.php --setWikifabHomePage
 
-	php maintenance/update.php
-	php maintenance/initWikifab.php --setWikifabHomePage
+
+the installation is now done and you will be able to access it correctly. if you see qny issue or warning, please let us know on the forum : 
+http://feedback.wikifab.org/
